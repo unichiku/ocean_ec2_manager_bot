@@ -1,0 +1,2 @@
+discord.py
+requests==2.26.0
