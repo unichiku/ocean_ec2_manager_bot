@@ -23,26 +23,28 @@ client = discord.Client()
 
 async def down_ec2(user_name):
     channel = client.get_channel(ID_CHANNEL_BOT)
-    r = requests.get(f'{LAMBDA_INVOKE_PATH}/down')
+    r = requests.get(f'{LAMBDA_INVOKE_PATH}/down').json()
 
-    status = r.status_code
+    status = r["statusCode"]
+
     if status == STATUS_OK:
         await channel.send(f'ec2 down down down ... by `{user_name}`')
     else:
-        await channel.send(f'[ERROR!] lambda invocation error --> `{r.text}`')
+        await channel.send(f'[ERROR!] lambda invocation error --> `{r["body"]}`')
 
 
 async def up_ec2(user_name, ec2_instance_type):
     channel = client.get_channel(ID_CHANNEL_BOT)
     r = requests.get(
         f'{LAMBDA_INVOKE_PATH}/up?instance_type={ec2_instance_type}'
-    )
+    ).json()
 
-    status = r.status_code
+    status = r["statusCode"]
+
     if status == STATUS_OK:
         await channel.send(f'ec2 up up up ... by `{user_name}`\ninstance type is `{ec2_instance_type}`')
     else:
-        await channel.send(f'[ERROR!] lambda invocation error --> `{r.text}`')
+        await channel.send(f'[ERROR!] lambda invocation error --> `{r["body"]}`')
 
 
 async def validate_message(message):
